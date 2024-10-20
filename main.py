@@ -71,29 +71,30 @@ p = Pica()
 p.login()
 p.punch_in()
 
-# 排行榜的漫画
-comics = p.leaderboard()
+# # 排行榜的漫画
+# comics = p.leaderboard()
 
-# 关键词订阅的漫画
-keywords = os.environ.get("SUBSCRIBE_KEYWORD", "").split(',')
-for keyword in keywords:
-    subscribe_comics = p.search_all(keyword)
-    print('关键词%s : 订阅了%d本漫画' % (keyword, len(subscribe_comics)), flush=True)
-    comics += subscribe_comics
+# # 关键词订阅的漫画
+# keywords = os.environ.get("SUBSCRIBE_KEYWORD", "").split(',')
+# for keyword in keywords:
+#     subscribe_comics = p.search_all(keyword)
+#     print('关键词%s : 订阅了%d本漫画' % (keyword, len(subscribe_comics)), flush=True)
+#     comics += subscribe_comics
 
 # 收藏夹的漫画
 favourites = p.my_favourite_all()
 print('收藏夹共计%d本漫画' % (len(favourites)), flush=True)
 print('id | 本子 | 画师 | 分区', flush=True)
 
-for comic in favourites + comics:
+#for comic in favourites + comics:
+for comic in favourites:
     try:
         # 收藏夹:全量下载  其余:增量下载
-        download_comic(comic, comic not in favourites)
+        download_comic(comic, True)
         info = p.comic_info(comic['_id'])
         # 收藏夹中的漫画被下载后,自动取消收藏,避免下次运行时重复下载
-        if info["data"]['comic']['isFavourite']:
-            p.favourite(comic["_id"])
+        # if info["data"]['comic']['isFavourite']:
+        #     p.favourite(comic["_id"])
     except:
         print('download failed,{},{},{}', comic['_id'], comic["title"], traceback.format_exc(), flush=True)
         continue
